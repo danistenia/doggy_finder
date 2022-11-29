@@ -24,21 +24,28 @@ class RandomImg:
         #print(name_folder)
         folder = os.listdir(os.path.join(self.folder, name_folder))
         rand_idx_img = random.choice(range(len(folder)))
-        #img = plt.imread(os.path.join(self.folder, name_folder, folder[rand_idx_img]))
-        #plt.imshow(img)
+        
         self.selected_dog = os.path.join(self.folder, name_folder, folder[rand_idx_img])
 
-    def random_images(self):
+    def random_images(self, k: int):
 
         list_dir = os.listdir(self.folder)
         for path in list_dir:
             path_image_list = os.listdir(os.path.join(self.folder, path))
             rand_idx = random.choice(range(len(path_image_list)))
-            self.selected_dogs.append(os.path.join(self.folder, path, path_image_list[rand_idx]))
+            if k == 1:
+                rand_idx = random.choice(range(len(path_image_list)))
+                self.selected_dogs.append(os.path.join(self.folder, path, path_image_list[rand_idx]))
+            else:
+                rand_idxs = random.sample(range(len(path_image_list)), k=k)
+                for rand_idx in rand_idxs:
+                    self.selected_dogs.append(os.path.join(self.folder, path, path_image_list[rand_idx]))
 
-    def execute_img_imgs(self):
+
+
+    def execute_img_imgs(self, k):
         self.random_img()
-        self.random_images()
+        self.random_images(k)
 
 
 class DoggyFinder:
@@ -120,7 +127,7 @@ class DoggyFinder:
         plt.imshow(plt.imread(self.input_img))
         plt.title(self.input_img)
         plt.axis('off')
-        rows = 3
+        rows = 2
         cols = int(n / rows)
         fig, axs = plt.subplots(nrows=rows, ncols=cols, figsize=(15,4))
         
@@ -138,22 +145,22 @@ class DoggyFinder:
 
     
 random_class = RandomImg(folder=r'images')
-random_class.execute_img_imgs()
+random_class.execute_img_imgs(k=3)
 
 img, list_imgs = random_class.selected_dog, random_class.selected_dogs
+
 
 doggy = DoggyFinder(input_img= img, list_images=list_imgs)
 doggy.create_model()
 doggy.single_predict_fv()
 doggy.batch_predict_fv()
 
-#n = 10
-#doggy.top_n(n=n)
-doggy.plot_similar(n=10)
+#savetxt('descriptores.txt', doggy.vectors)
 
-
-#print(doggy.imgs_similar)
-#print(doggy.matrix_d)
+n = 12
+s = n - 4
+doggy.top_n(n=n)
+doggy.plot_similar(n=s)
 
 
 
