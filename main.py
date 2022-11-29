@@ -124,9 +124,15 @@ class DoggyFinder:
     
     def plot_similar(self, n):
         self.top_n(n)
+        
+        ###### Uncomment if you want, just for linkedin
+
         plt.imshow(plt.imread(self.input_img))
         plt.title(self.input_img)
         plt.axis('off')
+        
+        ##########
+        
         rows = 2
         cols = int(n / rows)
         fig, axs = plt.subplots(nrows=rows, ncols=cols, figsize=(15,4))
@@ -140,20 +146,20 @@ class DoggyFinder:
             plt.title(f'Parecido {i+1}')
         
         plt.show()
-            
-        
 
-    
+ 
 random_class = RandomImg(folder=r'images')
-random_class.execute_img_imgs(k=3)
+random_class.execute_img_imgs(k=5)
 
 img, list_imgs = random_class.selected_dog, random_class.selected_dogs
 
+# Manual input img
+img = r'./test/max_adulto.jpg'
 
 doggy = DoggyFinder(input_img= img, list_images=list_imgs)
 doggy.create_model()
 doggy.single_predict_fv()
-doggy.batch_predict_fv()
+doggy.batch_predict_fv()    
 
 #savetxt('descriptores.txt', doggy.vectors)
 
